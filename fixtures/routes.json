@@ -1,0 +1,23 @@
+{
+  "/activity": [
+    {
+      "file": "activity-v1.html",
+      "etag": "\"a1\""
+    },
+    {
+      "file": "activity-v2.html",
+      "etag": "\"a2\""
+    }
+  ],
+  "/manual": {
+    "file": "manual.html",
+    "etag": "\"m1\""
+  },
+  "/broken": {
+    "status": 503
+  },
+  "/new": {
+    "file": "manual.html",
+    "etag": "\"n1\""
+  }
+}
