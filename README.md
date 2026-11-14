@@ -1,6 +1,12 @@
 # 有限访问预算下的网页重访与新鲜度控制
 
-这个 Python 项目用于业务来源资料的检查与原始字节归档。当前提供单份资料预览和内容寻址保存，不生成业务查询视图。`freshness_planner/core.py` 处理现有资料预览，`archive.py` 保存原文件，`fixtures/` 保存本地业务演练资料，`tests/` 检查已有行为。
+这个 Python 项目用于业务来源资料的检查、原始字节归档与自适应重访计划。
+当前提供单份资料预览、内容寻址保存和基于观测证据的重访调度，不生成业务
+查询视图。`freshness_planner/core.py` 处理现有资料预览，`archive.py` 保存
+原文件，`observations.py` 管理抓取证据与删失区间变化率估计，`planner.py`
+在预算、业务截止时间与不确定性之间做可解释的取舍，`simulation.py` 用固定
+虚拟时钟演练一周计划，`fixtures/` 保存本地业务演练资料，`tests/` 检查已有
+行为。策略依据与取舍细节见 [`docs/strategy.md`](docs/strategy.md)。
 
 ## 环境
 
@@ -15,7 +21,15 @@ python3 -m pip install -r requirements.txt
 ```sh
 python3 -m freshness_planner inspect fixtures/pages.json
 python3 -m freshness_planner capture fixtures/pages.json --archive .work/raw
+python3 -m freshness_planner plan fixtures/pages.json
+python3 -m freshness_planner rehearse
 ```
+
+- `plan`：按资料中的页面属性与历史观测，输出当前时刻的自适应重访排序、
+  每个地址的打分分量与理由、剩余预算和未满足的新鲜度目标；
+- `rehearse`：用固定虚拟时钟跑一周演练（活动页改版、稳定说明页、连续
+  失败页、新地址探索、永久重定向退休），逐天记录"为什么选这个地址"，
+  并用来源真实改版时刻评估发现延迟，而不是只统计命中次数。
 
 归档返回 SHA-256、字节数及原文件名；文件名不参与内容身份。预览只说明单份来源的基本结构，不代表关联资料已经齐全。输入不可识别时命令失败，不产生空的成功结果。
 
